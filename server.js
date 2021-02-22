@@ -14,9 +14,7 @@ dotenv.config()
 app.use(cors())
 app.use(express.json({ limit: '5mb' }))
 
-app.get('/rest', (req, res) => {
-  return res.json('rest api is working.')
-})
+app.use('/rest', require('./routes/cloudinary'))
 
 // Databae connection
 connectDB()
@@ -34,6 +32,7 @@ const resolvers = mergeResolvers(
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req, res }) => ({ req, res }),
 })
 
 // applyMiddleware method connects ApolloServer to a specific HTTP framework ie: express
@@ -43,8 +42,10 @@ apolloServer.applyMiddleware({ app })
 const PORT = process.env.PORT || 8000
 
 app.listen(PORT, () => {
-  console.log(`The app listening on port ${PORT}`)
   console.log(
-    `graphql server is ready at http://localhost:${process.env.PORT}${apolloServer.graphqlPath}`
+    `The app is ready on port ${PORT} at http://localhost:${PORT}/rest`
+  )
+  console.log(
+    `graphql server is ready at http://localhost:${PORT}${apolloServer.graphqlPath}`
   )
 })

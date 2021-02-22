@@ -1,9 +1,14 @@
 const { gql } = require('apollo-server-express')
+const { authCheck } = require('../helpers/auth')
 const { posts } = require('../temp')
 
 // Queries
 const totalPosts = () => posts.length
-const allPosts = () => posts
+
+const allPosts = async (parent, args, { req }) => {
+  await authCheck(req)
+  return posts
+}
 
 // Mutations
 const newPost = (parent, args) => {
