@@ -40,6 +40,8 @@ module.exports = gql`
     userUpdate(input: UserUpdateInput!): User!
   }
   type Query {
-    userDetails: User!
+    userDetails: User
+    publicProfile(email: String!): User!
+    allUsers: [User!]
   }
 `
